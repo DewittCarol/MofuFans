@@ -143,7 +143,7 @@ curl --fail http://127.0.0.1:8088/api/theme
 
 ## 构建包部署
 
-当前版本尚未发布对应的预编译附件。可以在兼容的 Linux 电脑、WSL 或构建服务器上执行 `scripts/build-release.py`，再把 `dist/mofufans/` 上传到目标服务器：
+从[正式Release](https://github.com/DewittCarol/MofuFans/releases/tag/v0.1.0)下载匹配的Linux AMD64／ARM64运行包，先读[下载与使用说明](QUICKSTART.md)并校验SHA256。官方v0.1.0包基于Ubuntu22.04／glibc2.35构建，目标需要相同架构及glibc2.35或更高；不适用于Alpine等musl系统。也可以在兼容的 Linux 电脑、WSL 或构建服务器上执行 `scripts/build-release.py`，再把 `dist/mofufans/` 上传到目标服务器：
 
 ```bash
 tar -C dist -czf mofufans-linux.tar.gz mofufans

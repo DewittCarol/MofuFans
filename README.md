@@ -8,6 +8,10 @@
 
 [使用范围](#使用范围与适配边界) · [功能介绍](#功能介绍) · [快速开始](#快速开始) · [安全上线](doc/SECURITY-OPERATIONS.md) · [后台配置](#后台配置) · [部署指南](doc/DEPLOYMENT.md) · [参与开发](doc/DEVELOPMENT.md)
 
+**下载 v0.1.0：** [部署包与源码](https://github.com/DewittCarol/MofuFans/releases/tag/v0.1.0) · [下载使用说明](doc/QUICKSTART.md)
+
+**只读演示：** [前台](https://mofufans-demo.dewitt.work/) · [后台](https://mofufans-demo.dewitt.work/admin/)。所有内容均为示例，修改、上传、投稿和外发功能已关闭。
+
 ## 使用范围与适配边界
 
 “部署后可用”指基础业务可以在后台配置和运营，不代表自带主播素材、第三方账号或完整的公网防护。开放公网访问前，请按[上线与日常安全指南](doc/SECURITY-OPERATIONS.md)完成 HTTPS、可信代理、服务器入口和备份等检查；可以把该文档直接交给协助部署的 AI Agents。
@@ -129,7 +133,7 @@
 
 **先试用，再开放。** 不熟悉服务器配置时，先仅在本机或自己可访问的环境运行。交给 AI 部署时，要求它先读 [AGENTS.md](AGENTS.md) 和[安全指南](doc/SECURITY-OPERATIONS.md)，逐项报告验收结果；应用内已有防护，服务器和网络仍需配置。
 
-获取本仓库源码后，在项目根目录选择以下方式部署。当前尚未发布对应的预编译下载包，请从源码构建或自行打包部署。
+Linux服务器可直接下载[Release运行包](https://github.com/DewittCarol/MofuFans/releases/tag/v0.1.0)，选择AMD64或ARM64并按[下载使用说明](doc/QUICKSTART.md)安装。运行端需要匹配架构、glibc2.35或更高、Nginx和CA证书，无需Go／Node.js。使用Docker、面板或需要开发时，下载源码后选择下面的方式。
 
 ### 选择部署方式
 

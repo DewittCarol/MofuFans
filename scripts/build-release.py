@@ -35,7 +35,7 @@ def build(root, output, version='development'):
                      'deploy/Caddyfile', 'LICENSE', 'NOTICE.md', 'shared/joiask-emoji-assets.json',
                      'SECURITY.md', 'doc/DEPLOYMENT.md', 'doc/CONFIGURATION.md',
                      'doc/DEVELOPMENT.md', 'doc/AI.md', 'doc/FEATURES.md', 'doc/UPGRADING.md',
-                     'doc/SECURITY.md', 'doc/SECURITY-OPERATIONS.md'):
+                     'doc/SECURITY.md', 'doc/SECURITY-OPERATIONS.md', 'doc/QUICKSTART.md', 'CHANGELOG.md'):
             target = package / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(root / name, target)
