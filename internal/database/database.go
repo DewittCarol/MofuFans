@@ -81,9 +81,6 @@ func initializeDB() {
 		&SongTagLink{},
 		&GalleryWork{},
 		&GalleryImage{},
-		&WebsiteAssetRequest{},
-		&WebsiteAssetFile{},
-		&WebsiteAssetSettings{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -158,12 +155,6 @@ func initializeDB() {
 		log.Info("Initializing default tag.")
 		if err := DB.Create(&Tag{TagName: DefaultTagName, Description: "默认话题"}).Error; err != nil {
 			log.Fatal("Failed to initialize default tag.", err)
-		}
-	}
-	var assetSettings WebsiteAssetSettings
-	if DB.First(&assetSettings).RowsAffected == 0 {
-		if err := DB.Create(&WebsiteAssetSettings{Instructions: WebsiteAssetDefaultInstructions}).Error; err != nil {
-			log.Fatal(err)
 		}
 	}
 }

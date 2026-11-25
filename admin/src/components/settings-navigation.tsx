@@ -7,9 +7,6 @@ import { useAuth } from "@/lib/auth";
 const baseSections = [
   { id: "submission-settings", label: "投稿权限" },
   { id: "voyage-settings", label: "舰礼展示" },
-  { id: "cursor-settings", label: "鼠标指针" },
-  { id: "pet-settings", label: "桌宠" },
-  { id: "reaction-settings", label: "贴表情互动" },
   { id: "bilibili-verification", label: "B 站注册验证" },
 ];
 
@@ -64,11 +61,11 @@ export function SettingsNavigation({ children }: { children: ReactNode }) {
         {sections.map(section => <a key={section.id} href={`#${section.id}`}
           aria-current={active === section.id ? "location" : undefined}
           onClick={event => { event.preventDefault(); jumpTo(section.id); }}>{section.label}</a>)}
-        <a className={styles.saveLink} href="#save-settings" onClick={event => { event.preventDefault(); jumpTo("save-settings"); }}>保存投稿与互动设置</a>
+        <a className={styles.saveLink} href="#save-settings" onClick={event => { event.preventDefault(); jumpTo("save-settings"); }}>保存设置</a>
       </div>
       <select aria-label="跳转到设置分区" className={styles.mobileSelect} value={active} onChange={event => jumpTo(event.target.value)}>
         {sections.map(section => <option key={section.id} value={section.id}>{section.label}</option>)}
-        <option value="save-settings">保存投稿与互动设置</option>
+        <option value="save-settings">保存设置</option>
       </select>
     </nav>
     <div className={styles.content}>{children}</div>

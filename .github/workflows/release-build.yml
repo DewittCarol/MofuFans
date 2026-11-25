@@ -1,6 +1,11 @@
 name: Release packages
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Package version label (does not publish a Release)
+        required: false
+        default: development
   push:
     branches: ['codex/release-*']
 permissions:
@@ -20,6 +25,8 @@ jobs:
             goarch: arm64
     runs-on: ${{ matrix.runner }}
     container: ubuntu:22.04
+    env:
+      PACKAGE_VERSION: ${{ inputs.version || 'development' }}
     steps:
       - name: Prepare native build environment
         run: |
@@ -39,7 +46,7 @@ jobs:
         with:
           node-version: '22'
       - name: Build complete native package
-        run: python3 scripts/build-release.py --version v0.1.0 --output dist/mofufans
+        run: python3 scripts/build-release.py --version "$PACKAGE_VERSION" --output dist/mofufans
       - name: Verify regression and dependencies
         run: |
           go test ./cmd/... ./internal/... ./pkg/...
@@ -53,11 +60,11 @@ jobs:
           python3 scripts/smoke-test.py --binary dist/mofufans/mofufans --nginx
           python3 scripts/smoke-onboarding.py --binary dist/mofufans/mofufans
           python3 scripts/smoke-upgrade.py --old-binary dist/mofufans/mofufans --binary dist/mofufans/mofufans
-          python3 scripts/verify-release-package.py dist/mofufans --arch ${{ matrix.arch }} --version v0.1.0
+          python3 scripts/verify-release-package.py dist/mofufans --arch ${{ matrix.arch }} --version "$PACKAGE_VERSION"
       - name: Archive verified package
         run: |
           mkdir -p release-assets
-          tar -C dist -czf release-assets/mofufans-v0.1.0-linux-${{ matrix.arch }}.tar.gz mofufans
+          tar -C dist -czf release-assets/mofufans-linux-${{ matrix.arch }}.tar.gz mofufans
           sha256sum release-assets/* > release-assets/SHA256SUMS
       - uses: actions/upload-artifact@v6
         with:

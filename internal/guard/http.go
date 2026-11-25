@@ -119,9 +119,6 @@ func BodyLimit(path string) int64 {
 	if path == "/api/login" || path == "/api/admin/reauth" || strings.HasPrefix(path, "/api/account/signature/") || path == "/api/account/login" {
 		return 16 << 10
 	}
-	if path == "/api/website-assets" {
-		return 520 << 20
-	}
 	if path == "/api/question" {
 		return 32 << 20
 	}

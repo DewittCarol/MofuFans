@@ -1,7 +1,7 @@
 export const voyageTiers = [
-  { id: 'captain', name: '舰长', icon: '/voyage-tiers/captain.svg', background: 'rgba(76, 125, 255, 0.6)', border: '#58A1F8', foreground: '#1C285C' },
-  { id: 'admiral', name: '提督', icon: '/voyage-tiers/admiral.svg', background: 'rgba(167, 115, 241, 0.6)', border: '#D47AFF', foreground: '#382154' },
-  { id: 'governor', name: '总督', icon: '/voyage-tiers/governor.svg', background: 'rgba(236, 79, 110, 0.6)', border: '#F18087', foreground: '#53172A' },
+  { id: 'captain', name: '舰长', icon: '/voyage-tiers/captain.png', background: 'rgba(76, 125, 255, 0.6)', border: '#58A1F8', foreground: '#1C285C' },
+  { id: 'admiral', name: '提督', icon: '/voyage-tiers/admiral.png', background: 'rgba(167, 115, 241, 0.6)', border: '#D47AFF', foreground: '#382154' },
+  { id: 'governor', name: '总督', icon: '/voyage-tiers/governor.png', background: 'rgba(236, 79, 110, 0.6)', border: '#F18087', foreground: '#53172A' },
 ] as const;
 export type VoyageTier = typeof voyageTiers[number]['id'];
 export interface VoyageGift {

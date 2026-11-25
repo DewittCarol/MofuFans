@@ -171,7 +171,6 @@ func Run() {
 	songs := new(controller.SongController)
 	gallery := new(controller.GalleryController)
 	statisticsController := new(controller.StatisticsController)
-	websiteAssets := new(controller.WebsiteAssetController)
 	accountController := &controller.AccountController{SignatureBrand: controller.ThemeSignatureBrand}
 	bilibiliClient := bilibili.NewClient()
 	voyageRecipients := &controller.VoyageRecipientsController{Client: bilibiliClient, AvatarStorage: avatar.NewStore()}
@@ -376,13 +375,6 @@ func Run() {
 		{
 			api.GET("/statistics", authMiddleware, statisticsController.Get)
 		}
-		api.GET("/website-assets", authMiddleware, websiteAssets.List)
-		api.POST("/website-assets", authMiddleware, websiteAssets.Create)
-		api.PUT("/website-assets/requests/:id", authMiddleware, websiteAssets.Update)
-		api.DELETE("/website-assets/requests/:id", authMiddleware, websiteAssets.Delete)
-		api.GET("/website-assets/files/:id", authMiddleware, websiteAssets.Download)
-		api.GET("/website-assets/settings", authMiddleware, websiteAssets.GetSettings)
-		api.PUT("/website-assets/settings", authMiddleware, websiteAssets.PutSettings)
 	}
 	address := viper.GetString("server.host") + ":" + strconv.Itoa(viper.GetInt("server.port"))
 	logrus.Info(address)

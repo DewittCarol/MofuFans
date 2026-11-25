@@ -11,6 +11,7 @@ import { useSiteTheme } from '@/lib/site-theme';
 import { FooterSettings } from '@/components/footer-settings';
 import { BackgroundSettings } from '@/components/background-settings';
 import { EmojiSettings } from '@/components/emoji-settings';
+import { getSettings, updateSettings, type CursorTheme } from '@/lib/api';
 import { adminColorKeys, colorLabels, contrast, copyTheme, defaultTheme, hexColor, parseTheme, safeAsset, themeVariables, type ColorKey, type ModuleKey, type Theme } from '../../../../../shared/theme';
 
 type Preset={id:string;name:string;builtin:boolean;theme:Theme};
@@ -64,9 +65,15 @@ export default function ThemePage(){
   const initialized=useRef(false);const importFile=useRef<HTMLInputElement>(null);
   const [presets,setPresets]=useState<Preset[]>([]),[selected,setSelected]=useState('default'),[presetName,setPresetName]=useState('');
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(''),[deletePending,setDeletePending]=useState(false),[previewAdmin,setPreviewAdmin]=useState(false);
+  const [area,setArea]=useState('site');
+  type Behavior={cursor_theme:string;pet_default_expanded:boolean;allow_repeated_reactions:boolean};
+  const [behavior,setBehavior]=useState<Behavior|null>(null),[savedBehavior,setSavedBehavior]=useState<Behavior|null>(null),[cursorThemes,setCursorThemes]=useState<CursorTheme[]>([]);
   useEffect(()=>{if(ready&&!initialized.current){initialized.current=true;setDraft(copyTheme(theme));setSaved(copyTheme(theme));setBaseRevision(revision);}},[theme,ready,revision]);
   useEffect(()=>{void request<Preset[]>('/api/theme/presets').then(setPresets).catch(e=>setError(e.message));},[]);
-  const dirty=JSON.stringify(draft)!==JSON.stringify(saved);
+  useEffect(()=>{void getSettings().then(result=>{if(result.code!==200)throw new Error(result.message||'外观设置加载失败');const value={cursor_theme:result.data.cursor_theme||'system',pet_default_expanded:!!result.data.pet_default_expanded,allow_repeated_reactions:!!result.data.allow_repeated_reactions};setBehavior(value);setSavedBehavior(value);setCursorThemes(result.data.cursor_themes||[]);}).catch(e=>setError(e.message));},[]);
+  const themeDirty=JSON.stringify(draft)!==JSON.stringify(saved);
+  const behaviorDirty=JSON.stringify(behavior)!==JSON.stringify(savedBehavior);
+  const dirty=themeDirty||behaviorDirty;
   useEffect(()=>{if(!dirty)return;const guard=(e:BeforeUnloadEvent)=>{e.preventDefault();};window.addEventListener('beforeunload',guard);return()=>window.removeEventListener('beforeunload',guard);},[dirty]);
   let valid:Theme|null=null;let validation='';try{valid=parseTheme(draft);}catch(e){validation=(e as Error).message;}
   const preview=valid||saved;
@@ -75,7 +82,11 @@ export default function ThemePage(){
   const brand=<K extends keyof Theme['brand']>(key:K,value:string)=>setDraft(t=>({...t,brand:{...t.brand,[key]:value}}));
   const color=(key:ColorKey,value:string)=>setDraft(t=>({...t,colors:{...t.colors,[key]:value}}));
   const act=async(action:()=>Promise<void>)=>{setBusy(true);setMessage('');setError('');try{await action();}catch(e){setError((e as Error).message);}finally{setBusy(false);}};
-  const save=()=>act(async()=>{const validated=parseTheme(draft);const result=await request<{theme:Theme;revision:number}>('/api/theme',{method:'PUT',...json({theme:validated,revision:baseRevision})});setSaved(copyTheme(result.theme));setDraft(copyTheme(result.theme));setBaseRevision(result.revision);await refresh();try{localStorage.setItem('site-theme-updated',String(Date.now()));}catch{/* Storage may be disabled. */}setMessage('主题已保存，前后台已应用。');});
+  const save=()=>act(async()=>{
+    if(themeDirty){const validated=parseTheme(draft);const result=await request<{theme:Theme;revision:number}>('/api/theme',{method:'PUT',...json({theme:validated,revision:baseRevision})});setSaved(copyTheme(result.theme));setDraft(copyTheme(result.theme));setBaseRevision(result.revision);await refresh();}
+    if(behaviorDirty&&behavior&&savedBehavior){const patch:Partial<Behavior>={};for(const key of Object.keys(behavior) as (keyof Behavior)[]){if(behavior[key]!==savedBehavior[key])Object.assign(patch,{[key]:behavior[key]});}const result=await updateSettings(patch);if(result.code!==200)throw new Error(result.message||'外观设置保存失败，请重试');setSavedBehavior({...behavior});}
+    try{localStorage.setItem('site-theme-updated',String(Date.now()));}catch{/* Storage may be disabled. */}setMessage('设置已保存。');
+  });
   const exportTheme=()=>{try{const data=parseTheme(draft);const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='site-theme.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){setError((e as Error).message);}};
   const importTheme=async(file?:File)=>{if(!file)return;try{if(file.size>64*1024)throw new Error('主题文件不能超过 64 KB');setDraft(parseTheme(JSON.parse(await file.text())));setMessage('主题已载入草稿，保存后生效。');setError('');}catch(e){setError((e as Error).message);}finally{if(importFile.current)importFile.current.value='';}};
   return <div className="space-y-6">
@@ -84,6 +95,9 @@ export default function ThemePage(){
     {error&&<p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">{error}</p>}
     {message&&<p role="status" className="text-sm text-success">{message}</p>}
     {baseRevision>0&&revision!==baseRevision&&<div role="alert" className="rounded-lg border border-border bg-secondary p-3 text-sm">其他页面已更新主题，请先导出保留你的草稿，再重新载入。<Button className="ml-2" size="sm" variant="outline" onClick={()=>{setDraft(copyTheme(theme));setSaved(copyTheme(theme));setBaseRevision(revision);}}>载入最新主题</Button></div>}
+    <Tabs value={area} onValueChange={setArea}>
+    <TabsList className="mb-6 flex h-auto flex-wrap justify-start gap-1" aria-label="主题设置分区"><TabsTrigger value="site">站点外观</TabsTrigger><TabsTrigger value="background">背景图</TabsTrigger><TabsTrigger value="effects">鼠标与桌宠</TabsTrigger><TabsTrigger value="emojis">表情管理</TabsTrigger><TabsTrigger value="footer">页脚备案</TabsTrigger></TabsList>
+    <TabsContent value="site">
     <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0 rounded-xl border border-border bg-card p-4 sm:p-6"><Tabs defaultValue="brand">
         <TabsList className="mb-6 flex h-auto flex-wrap justify-start gap-1"><TabsTrigger value="brand">品牌信息</TabsTrigger><TabsTrigger value="colors">基础配色</TabsTrigger><TabsTrigger value="modules">模块配色</TabsTrigger><TabsTrigger value="presets">主题预设</TabsTrigger></TabsList>
@@ -93,9 +107,7 @@ export default function ThemePage(){
           <div className="space-y-2"><Label htmlFor="bilibili_uid">主播 B 站 UID（可留空）</Label><Input id="bilibili_uid" inputMode="numeric" maxLength={19} value={draft.brand.bilibili_uid} onChange={e=>brand('bilibili_uid',e.target.value)}/><p className="text-xs text-muted-foreground">填写后，首页显示对应的 B 站主页入口。</p></div>
           <div className="grid gap-6 sm:grid-cols-2">{([['logo','导航图标'],['avatar','首页头像'],['favicon','前台页签图标'],['admin_favicon','后台页签图标']] as const).map(([key,label])=><ImageField key={key} name={label} value={draft.brand[key]} onChange={v=>brand(key,v)} onError={setError}/>)}</div>
           <p className="text-xs text-muted-foreground">图片支持 PNG、JPG、WebP，最大 12 MB。页签图标建议使用正方形 PNG。</p>
-          <div className="space-y-2"><Label htmlFor="cursor_message">鼠标设置附加文字（可留空）</Label><Input id="cursor_message" maxLength={300} value={draft.brand.cursor_message} onChange={e=>brand('cursor_message',e.target.value)}/></div>
-          <div className="grid gap-4 sm:grid-cols-2">{([['texture','显示织物纹理'],['pixel_logo','图标使用像素显示'],['cursor','启用自定义鼠标'],['pet','显示前台桌宠']] as const).map(([key,label])=><label key={key} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={draft.appearance[key]} onChange={e=>setDraft(t=>({...t,appearance:{...t.appearance,[key]:e.target.checked}}))} className="h-4 w-4 accent-primary"/>{label}</label>)}</div>
-          <div className="space-y-3 rounded-lg border border-border p-4"><Label htmlFor="pet-model">桌宠 VRM 模型地址</Label><Input id="pet-model" value={draft.pet.model_url} onChange={e=>setDraft(t=>({...t,pet:{...t.pet,model_url:e.target.value}}))} placeholder="站内路径或 HTTPS 链接"/><Label htmlFor="pet-label">桌宠名称</Label><Input id="pet-label" maxLength={80} value={draft.pet.label} onChange={e=>setDraft(t=>({...t,pet:{...t.pet,label:e.target.value}}))}/><p className="text-xs text-muted-foreground">请使用获准使用的模型。未填写地址时不显示桌宠；手机端不加载模型。</p></div>
+          <div className="grid gap-4 sm:grid-cols-2">{([['texture','显示织物纹理'],['pixel_logo','图标使用像素显示']] as const).map(([key,label])=><label key={key} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={draft.appearance[key]} onChange={e=>setDraft(t=>({...t,appearance:{...t.appearance,[key]:e.target.checked}}))} className="h-4 w-4 accent-primary"/>{label}</label>)}</div>
         </TabsContent>
         <TabsContent value="colors" className="space-y-7">
           <div className="grid gap-5 sm:grid-cols-2">{mainColors.map(key=><ColorField key={key} name={colorLabels[key]} value={draft.colors[key]} onChange={v=>color(key,v)}/>)}</div>
@@ -115,9 +127,27 @@ export default function ThemePage(){
       </Tabs></div>
       <aside className="space-y-3 xl:sticky xl:top-0"><div className="flex items-center justify-between"><h2 className="text-sm font-medium">草稿预览</h2><Button variant="outline" size="sm" onClick={()=>setPreviewAdmin(v=>!v)}>{previewAdmin?'查看前台':'查看后台'}</Button></div><Preview theme={preview} admin={previewAdmin}/>{lowContrast.length>0&&<p className="text-xs text-warning">{lowContrast.join('、')}的文字对比度偏低，建议调整颜色。</p>}<p className="text-xs text-muted-foreground">保存后应用到前台和后台。</p></aside>
     </div>
-    <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-background/95 py-4 backdrop-blur"><p className="text-sm text-destructive" role={validation?'alert':undefined}>{validation}</p><div className="flex gap-2"><Button variant="outline" disabled={!dirty||busy} onClick={()=>{setDraft(copyTheme(saved));setError('');setMessage('');}}>撤销修改</Button><Button disabled={!ready||busy||!!validation||!dirty||revision!==baseRevision} onClick={()=>void save()}><Save size={16}/>{busy?'处理中…':'保存主题'}</Button></div></div>
-    <BackgroundSettings />
-    <EmojiSettings />
-    <FooterSettings />
+    </TabsContent>
+    <TabsContent value="background"><BackgroundSettings /></TabsContent>
+    <TabsContent value="effects" className="max-w-3xl space-y-6">
+      <section className="space-y-5 rounded-xl border border-border bg-card p-5 sm:p-6" aria-labelledby="cursor-heading"><h2 id="cursor-heading" className="text-lg font-semibold">鼠标指针</h2>
+        <label className="flex items-center gap-2 text-sm"><input type="checkbox" className="h-4 w-4 accent-primary" checked={draft.appearance.cursor} onChange={e=>setDraft(t=>({...t,appearance:{...t.appearance,cursor:e.target.checked}}))}/>启用自定义鼠标</label>
+        <div className="space-y-2"><Label htmlFor="cursor-theme">鼠标套装</Label><Select value={behavior?.cursor_theme||'system'} onValueChange={value=>setBehavior(current=>current?{...current,cursor_theme:value}:current)} disabled={!behavior||busy}><SelectTrigger id="cursor-theme"><SelectValue /></SelectTrigger><SelectContent>{cursorThemes.map(item=><SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}</SelectContent></Select><p className="text-sm text-muted-foreground">选择已安装的套装，手机触屏不受影响。通用版仅附系统指针，自定义套装需自行制作并安装。</p></div>
+        <div className="space-y-2"><Label htmlFor="cursor_message">鼠标设置说明（可留空）</Label><Input id="cursor_message" maxLength={300} value={draft.brand.cursor_message} onChange={e=>brand('cursor_message',e.target.value)}/></div>
+      </section>
+      <section className="space-y-5 rounded-xl border border-border bg-card p-5 sm:p-6" aria-labelledby="pet-heading"><h2 id="pet-heading" className="text-lg font-semibold">桌宠</h2>
+        <label className="flex items-center gap-2 text-sm"><input type="checkbox" className="h-4 w-4 accent-primary" checked={draft.appearance.pet} onChange={e=>setDraft(t=>({...t,appearance:{...t.appearance,pet:e.target.checked}}))}/>在前台显示桌宠</label>
+        <div className="space-y-2"><Label htmlFor="pet-model">VRM 模型地址</Label><Input id="pet-model" value={draft.pet.model_url} onChange={e=>setDraft(t=>({...t,pet:{...t.pet,model_url:e.target.value}}))} placeholder="站内路径或 HTTPS 链接"/><p className="text-sm text-muted-foreground">请填写有权使用的兼容模型地址。没有模型上传或动作编辑功能；地址为空时不显示桌宠。</p></div>
+        <div className="space-y-2"><Label htmlFor="pet-label">桌宠名称</Label><Input id="pet-label" maxLength={80} value={draft.pet.label} onChange={e=>setDraft(t=>({...t,pet:{...t.pet,label:e.target.value}}))}/></div>
+        <div className="space-y-2"><Label htmlFor="pet-default-state">首次进入网站时</Label><Select value={behavior?.pet_default_expanded?'expanded':'collapsed'} onValueChange={value=>setBehavior(current=>current?{...current,pet_default_expanded:value==='expanded'}:current)} disabled={!behavior||busy}><SelectTrigger id="pet-default-state"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="expanded">展开桌宠</SelectItem><SelectItem value="collapsed">收起桌宠</SelectItem></SelectContent></Select><p className="text-sm text-muted-foreground">访客之后可以自行展开或收起。收起时不加载模型，手机端不显示桌宠。</p></div>
+      </section>
+    </TabsContent>
+    <TabsContent value="emojis" className="space-y-6">
+      <section className="space-y-3 rounded-xl border border-border bg-card p-5" aria-labelledby="reaction-heading"><h2 id="reaction-heading" className="text-lg font-semibold">贴表情互动</h2><label className="flex items-center gap-2 text-sm"><input type="checkbox" className="h-4 w-4 accent-primary" disabled={!behavior||busy} checked={!!behavior?.allow_repeated_reactions} onChange={e=>setBehavior(current=>current?{...current,allow_repeated_reactions:e.target.checked}:current)}/>允许重复贴表情</label><p className="text-sm text-muted-foreground">开启后，同一张提问卡片可多次贴表情；关闭后，每个网络地址对每张卡片只能回应一次。点击底部“保存设置”后生效。</p></section>
+      <EmojiSettings />
+    </TabsContent>
+    <TabsContent value="footer"><FooterSettings /></TabsContent>
+    </Tabs>
+    {['site','effects','emojis'].includes(area)&&<div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 border-t border-border bg-background py-4"><p className="text-sm text-destructive" role={validation?'alert':undefined}>{validation}</p><div className="flex gap-2"><Button variant="outline" disabled={!dirty||busy} onClick={()=>{setDraft(copyTheme(saved));setBehavior(savedBehavior?{...savedBehavior}:null);setError('');setMessage('');}}>撤销修改</Button><Button disabled={!ready||busy||!!validation||!dirty||(themeDirty&&revision!==baseRevision)} onClick={()=>void save()}><Save size={16}/>{busy?'保存中…':'保存设置'}</Button></div></div>}
   </div>;
 }

@@ -4,7 +4,7 @@ import { useSiteTheme } from '@/lib/site-theme';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition, type MouseEvent } from 'react';
-import { LayoutDashboard, MessageSquare, Inbox, Trash2, Tag, Users, UserCheck, Settings, Palette, Home, Sailboat, Gift, ClipboardList, MapPin, Truck, LogOut, Music2, Images, ImagePlus, ChevronDown, BookOpen, LoaderCircle, ListTodo, Shield, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Inbox, Trash2, Tag, Users, UserCheck, Settings, Palette, Home, Sailboat, Gift, ClipboardList, MapPin, Truck, LogOut, Music2, Images, ImagePlus, ChevronDown, BookOpen, LoaderCircle, Shield, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
 
@@ -34,7 +34,6 @@ const groups:{id:string;label:string;icon:LucideIcon;items:Item[]}[]=[
     {href:'/dashboard/users',label:'管理员',icon:Users},
     {href:'/dashboard/members',label:'注册用户',icon:UserCheck},
   ]},
-  {id:'site-requests',label:'站点协作',icon:ListTodo,items:[{href:'/dashboard/site-requests',label:'素材与需求',icon:ListTodo}]},
 ];
 
 export function Sidebar(){
