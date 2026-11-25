@@ -1,0 +1,19 @@
+// ==UserScript==
+// @name         MofuFans 私信填入助手
+// @namespace    https://example.com/
+// @version      1.2.0
+// @description  加高 B 站私信输入区，将后台选定的舰礼或电子礼物通知填入对应私信，发送由你确认。仅主播需要安装。
+// @match        https://example.com/admin/*
+// @match        https://preview.example.com/admin/*
+// @match        http://127.0.0.1:18081/admin/*
+// @match        http://localhost:18081/admin/*
+// @match        https://message.bilibili.com/*
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
+// @grant        GM_openInTab
+// @run-at       document-idle
+// @sandbox      DOM
+// @noframes
+// ==/UserScript==

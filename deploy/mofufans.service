@@ -1,0 +1,23 @@
+[Unit]
+Description=MofuFans API
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=mofufans
+Group=mofufans
+WorkingDirectory=/opt/mofufans
+Environment=GIN_MODE=release
+ExecStart=/opt/mofufans/mofufans
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/mofufans/data
+
+[Install]
+WantedBy=multi-user.target

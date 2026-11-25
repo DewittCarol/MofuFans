@@ -1,0 +1,236 @@
+[
+  {
+    "kind": "reaction",
+    "name": "👍",
+    "value": "👍",
+    "url": "/emojis/76.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "👎",
+    "value": "👎",
+    "url": "/emojis/77.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "🤣",
+    "value": "🤣",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "😭",
+    "value": "😭",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "😓",
+    "value": "😓",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "😬",
+    "value": "😬",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "🥳",
+    "value": "🥳",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "😨",
+    "value": "😨",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "😠",
+    "value": "😠",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "💩",
+    "value": "💩",
+    "url": "/emojis/59.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "💖",
+    "value": "💖",
+    "url": "/emojis/66.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "🐵",
+    "value": "🐵",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "❓",
+    "value": "❓",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "🫂",
+    "value": "🫂",
+    "url": "/emojis/49.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "🔘",
+    "value": "🔘",
+    "url": "/emojis/424.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "👅",
+    "value": "👅",
+    "url": "/emojis/339.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "🥺",
+    "value": "🥺",
+    "url": "/emojis/111.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "👻",
+    "value": "👻",
+    "url": "/emojis/187.png"
+  },
+  {
+    "kind": "reaction",
+    "name": "😅",
+    "value": "😅",
+    "url": ""
+  },
+  {
+    "kind": "reaction",
+    "name": "🌹",
+    "value": "🌹",
+    "url": "/emojis/63.png"
+  },
+  {
+    "kind": "input",
+    "name": "微笑",
+    "value": "😊",
+    "url": ""
+  },
+  {
+    "kind": "input",
+    "name": "感谢",
+    "value": "🙏",
+    "url": ""
+  },
+  {
+    "kind": "input",
+    "name": "喜欢",
+    "value": "❤️",
+    "url": ""
+  },
+  {
+    "kind": "input",
+    "name": "庆祝",
+    "value": "🎉",
+    "url": ""
+  },
+  {
+    "kind": "input",
+    "name": "跑了",
+    "value": "[轴伊Joi收藏集动态表情包_跑了]",
+    "url": "/joi-emojis/paole.webp"
+  },
+  {
+    "kind": "input",
+    "name": "鞠躬",
+    "value": "[轴伊Joi收藏集动态表情包_鞠躬]",
+    "url": "/joi-emojis/jugong.webp"
+  },
+  {
+    "kind": "input",
+    "name": "摇你",
+    "value": "[轴伊Joi收藏集动态表情包_摇你]",
+    "url": "/joi-emojis/yaoni.webp"
+  },
+  {
+    "kind": "input",
+    "name": "愤怒",
+    "value": "[轴伊Joi收藏集动态表情包_愤怒]",
+    "url": "/joi-emojis/fennu.webp"
+  },
+  {
+    "kind": "input",
+    "name": "猴",
+    "value": "[轴伊Joi收藏集动态表情包_猴]",
+    "url": "/joi-emojis/hou.webp"
+  },
+  {
+    "kind": "input",
+    "name": "NO",
+    "value": "[轴伊Joi收藏集动态表情包_NO]",
+    "url": "/joi-emojis/no.webp"
+  },
+  {
+    "kind": "input",
+    "name": "贴贴",
+    "value": "[轴伊Joi收藏集动态表情包_贴贴]",
+    "url": "/joi-emojis/tietie.webp"
+  },
+  {
+    "kind": "input",
+    "name": "呆",
+    "value": "[轴伊Joi收藏集动态表情包_呆]",
+    "url": "/joi-emojis/dai.webp"
+  },
+  {
+    "kind": "input",
+    "name": "唔唔",
+    "value": "[轴伊Joi收藏集动态表情包_唔唔]",
+    "url": "/joi-emojis/wuwu.webp"
+  },
+  {
+    "kind": "input",
+    "name": "啊这",
+    "value": "[轴伊Joi收藏集动态表情包_啊这]",
+    "url": "/joi-emojis/azhe.webp"
+  },
+  {
+    "kind": "input",
+    "name": "失落",
+    "value": "[轴伊Joi收藏集动态表情包_失落]",
+    "url": "/joi-emojis/shiluo.webp"
+  },
+  {
+    "kind": "input",
+    "name": "神气",
+    "value": "[轴伊Joi收藏集动态表情包_神气]",
+    "url": "/joi-emojis/shenqi.webp"
+  },
+  {
+    "kind": "input",
+    "name": "怎么这样",
+    "value": "[轴伊Joi收藏集动态表情包_怎么这样]",
+    "url": "/joi-emojis/zenmezhyang.webp"
+  },
+  {
+    "kind": "input",
+    "name": "睡觉",
+    "value": "[轴伊Joi收藏集动态表情包_睡觉]",
+    "url": "/joi-emojis/shuijiao.webp"
+  },
+  {
+    "kind": "input",
+    "name": "爆",
+    "value": "[轴伊Joi收藏集动态表情包_爆]",
+    "url": "/joi-emojis/bao.webp"
+  }
+]

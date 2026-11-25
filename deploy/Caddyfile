@@ -1,0 +1,4 @@
+# Replace with your own domain, point its DNS at the server, and allow 80/443.
+fans.example.com {
+    reverse_proxy 127.0.0.1:8088
+}

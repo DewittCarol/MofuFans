@@ -1,0 +1,4 @@
+import { defaultTheme } from "../../../../shared/theme";
+import type { Metadata } from 'next';
+export const metadata:Metadata={title: `${defaultTheme.modules.gallery.label} | ${defaultTheme.brand.tab_title}`};
+export default function Layout({children}:{children:React.ReactNode}){return children;}

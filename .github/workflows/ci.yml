@@ -1,0 +1,49 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            admin/package-lock.json
+      - run: npm ci --prefix frontend && npm ci --prefix admin
+      - run: npm audit --prefix frontend && npm audit --prefix admin
+      - run: go test ./cmd/... ./internal/... ./pkg/...
+      - run: go build -o /tmp/mofufans ./cmd
+      - run: go run golang.org/x/vuln/cmd/govulncheck@v1.10.0 ./...
+      - run: node scripts/test-clients.mjs
+      - run: npm run build --prefix frontend && npm run build --prefix admin
+      - run: python3 scripts/smoke-test.py --binary /tmp/mofufans
+      - run: python3 scripts/smoke-onboarding.py --binary /tmp/mofufans
+      - name: Rehearse upgrade from the change base
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE_SHA" ] || [[ "$BASE_SHA" =~ ^0+$ ]] || ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null || ! git merge-base --is-ancestor "$BASE_SHA" HEAD; then
+            echo "No usable preceding base: checking same-version restart and persisted data, not a cross-version upgrade."
+            python3 scripts/smoke-upgrade.py --old-binary /tmp/mofufans --binary /tmp/mofufans
+            exit 0
+          fi
+          git cat-file -e "$BASE_SHA^{commit}"
+          git worktree add --detach /tmp/mofufans-previous "$BASE_SHA"
+          (cd /tmp/mofufans-previous && go build -o /tmp/mofufans-previous-api ./cmd)
+          python3 scripts/smoke-upgrade.py --old-binary /tmp/mofufans-previous-api --binary /tmp/mofufans
+      - run: python3 -m unittest discover -s scripts -p 'test_deployment.py'
+      - run: python3 scripts/check-release.py
+      - run: docker build -t mofufans:ci .

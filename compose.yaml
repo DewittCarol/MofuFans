@@ -1,0 +1,13 @@
+services:
+  mofufans:
+    build: .
+    image: mofufans:local
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8088:80"
+    volumes:
+      - ./config:/work/config:ro
+      - ./data:/work/data
+    environment:
+      GIN_MODE: release
+      MOFUFANS_SECURITY_SECURE_COOKIE: ${MOFUFANS_SECURITY_SECURE_COOKIE:-}

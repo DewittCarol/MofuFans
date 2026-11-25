@@ -1,0 +1,33 @@
+{
+  "db_type": "sqlite",
+  "sqlite": "./data/mofufans.db",
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "trusted_proxies": ["127.0.0.1", "::1"],
+    "allowed_origins": []
+  },
+  "security": {
+    "session_secret": "",
+    "bilibili_cookie_key": "",
+    "secure_cookie": false
+  },
+  "bootstrap_admin": { "username": "", "password_hash": "" },
+  "storage_type": "local",
+  "upload_directory": "./data/uploads",
+  "background_directory": "./data/backgrounds",
+  "branding_directory": "./data/branding",
+  "emoji_directory": "./data/emojis",
+  "gallery_directory": "./data/gallery",
+  "voyage_directory": "./data/voyage",
+  "digital_gift_directory": "./data/digital-gifts",
+  "oss": {
+    "endpoint": "https://oss-cn-hangzhou.aliyuncs.com",
+    "region": "cn-hangzhou",
+    "bucket": "",
+    "prefix": "mofufans",
+    "access_key": "",
+    "secret_key": ""
+  },
+  "bilibili": { "test_recipient_uid": "" }
+}

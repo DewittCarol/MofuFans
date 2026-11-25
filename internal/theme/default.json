@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "brand": {
+    "site_name": "MofuFans",
+    "streamer_name": "主播",
+    "tab_title": "MofuFans",
+    "admin_title": "MofuFans · 管理后台",
+    "description": "提问、歌单、画廊与礼物回馈",
+    "logo": "/site-icon.svg",
+    "avatar": "",
+    "favicon": "/site-icon.svg",
+    "admin_favicon": "/admin/site-icon.svg",
+    "bilibili_uid": "",
+    "cursor_message": ""
+  },
+  "colors": {
+    "background": "#FFF8F2",
+    "foreground": "#402522",
+    "card": "#FFFDFC",
+    "card-foreground": "#402522",
+    "primary": "#B83B32",
+    "primary-foreground": "#FFFFFF",
+    "secondary": "#F8E6DD",
+    "secondary-foreground": "#673B32",
+    "muted-foreground": "#826059",
+    "accent": "#F4D6CA",
+    "accent-foreground": "#672D26",
+    "border": "#E5B9AC",
+    "ring": "#B83B32",
+    "destructive": "#AA2C30",
+    "success": "#4C7454",
+    "warning": "#91621B",
+    "brand": "#B83B32",
+    "nav-foreground": "#FFFFFF",
+    "sidebar": "#662820",
+    "sidebar-foreground": "#FFF8F2",
+    "sidebar-highlight": "#FFFFFF",
+    "fabric-stitch": "#CB9180",
+    "fabric-grain": "#F4E2D5",
+    "shadow": "#743C2F",
+    "selection": "#F2C2AE",
+    "selection-foreground": "#402522",
+    "viewer": "#241B19",
+    "chart-1": "#B83B32",
+    "chart-2": "#CB8A43",
+    "chart-3": "#6F875F",
+    "chart-4": "#9B6258",
+    "chart-5": "#A27A52",
+    "ask": "#B83B32",
+    "voyage": "#B83B32",
+    "songs": "#B83B32",
+    "gallery": "#B83B32",
+    "gifts": "#B83B32"
+  },
+  "admin_colors": {
+    "background": "#FFF8F2",
+    "foreground": "#402522",
+    "card": "#FFFDFC",
+    "card-foreground": "#402522",
+    "primary": "#B83B32",
+    "primary-foreground": "#FFFFFF",
+    "secondary": "#F8E6DD",
+    "secondary-foreground": "#673B32",
+    "muted-foreground": "#826059",
+    "accent": "#F4D6CA",
+    "accent-foreground": "#672D26",
+    "border": "#E5B9AC",
+    "ring": "#B83B32",
+    "shadow": "#743C2F"
+  },
+  "modules": {
+    "ask": {
+      "label": "提问箱",
+      "icon": ""
+    },
+    "voyage": {
+      "label": "大航海",
+      "icon": ""
+    },
+    "songs": {
+      "label": "歌单",
+      "icon": ""
+    },
+    "gifts": {"label": "电子礼物", "icon": ""},
+    "gallery": {
+      "label": "画廊",
+      "icon": ""
+    }
+  },
+  "appearance": {
+    "texture": true,
+    "pixel_logo": false,
+    "cursor": false,
+    "pet": false,
+    "module_colors": false
+  },
+  "pet": {"model_url": "", "label": "桌宠"}
+}

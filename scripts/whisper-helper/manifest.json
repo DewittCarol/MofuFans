@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "MofuFans 私信填入助手",
+  "version": "1.2.0",
+  "description": "加高 B 站私信输入区，将 MofuFans 后台选定的舰礼或电子礼物通知填入指定私信，发送由你确认。",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://message.bilibili.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://message.bilibili.com/*"
+      ],
+      "js": [
+        "fill-editor.js",
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "externally_connectable": {
+    "matches": [
+      "https://example.com/*",
+      "http://127.0.0.1/*",
+      "http://localhost/*"
+    ]
+  }
+}

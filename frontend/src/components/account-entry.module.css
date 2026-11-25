@@ -1,0 +1,75 @@
+.entry {
+  display: inline-flex;
+  min-block-size: 2.75rem;
+  min-inline-size: 0;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.25rem;
+  padding-inline: 0.5rem;
+}
+
+.entry:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.identity {
+  position: relative;
+  display: grid;
+  min-inline-size: 3rem;
+  max-inline-size: clamp(5.5rem, 16vw, 14rem);
+  block-size: 2.25rem;
+  align-items: center;
+  text-align: start;
+}
+
+.name {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: transform 160ms ease;
+}
+
+.hint {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(0.25rem);
+  transition: opacity 160ms ease, transform 160ms ease;
+  pointer-events: none;
+}
+
+.entry:focus-visible .name {
+  transform: translateY(-0.4375rem);
+}
+
+.entry:focus-visible .hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .entry:hover .name {
+    transform: translateY(-0.4375rem);
+  }
+
+  .entry:hover .hint {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name,
+  .hint {
+    transition: none;
+  }
+}
