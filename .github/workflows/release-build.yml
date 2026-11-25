@@ -25,17 +25,17 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates git python3 build-essential nginx curl xz-utils
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Trust this checked-out workspace
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
           architecture: ${{ matrix.goarch }}
           cache: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '22'
       - name: Build complete native package
@@ -59,7 +59,7 @@ jobs:
           mkdir -p release-assets
           tar -C dist -czf release-assets/mofufans-v0.1.0-linux-${{ matrix.arch }}.tar.gz mofufans
           sha256sum release-assets/* > release-assets/SHA256SUMS
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: native-${{ matrix.arch }}
           path: release-assets/

@@ -44,9 +44,9 @@ sha256sum --ignore-missing -c SHA256SUMS
    sudo apt-get install -y nginx ca-certificates
    ```
 
-3. 阅读包内`README.md`，按[部署指南的安装目录步骤](DEPLOYMENT.md#3-初始化安装目录)将**整个运行包**放入`/opt/mofufans`，创建专用服务用户并设置权限。随后安装包内的systemd和Nginx模板，执行`nginx -t`成功后再重载。已经解压的包不需要再次执行源码编译或复制不存在的`dist/`目录；以实际路径为准。
+3. 阅读包内`README.md`，按[部署指南的安装目录步骤](DEPLOYMENT.md#3-初始化安装目录)将**整个运行包**放入`/opt/mofufans`，创建专用服务用户并设置权限。安装包内的systemd和Nginx模板后，执行`sudo systemctl daemon-reload`、`sudo systemctl enable --now mofufans`启动API，执行`sudo nginx -t`成功后再启用／重载Nginx。Nginx的8088端口转发到Go API的回环8080端口。已经解压的包不需要再次执行源码编译或复制不存在的`dist/`目录；以实际路径为准。
 
-4. 首次启动没有默认管理员密码。从`sudo journalctl -u mofufans -n 100 --no-pager`或服务器的`/opt/mofufans/data/setup-token`读取本实例安装码，经只供自己访问的通道进入后台完成认领。
+4. 首次启动没有默认管理员密码。从`sudo journalctl -u mofufans -n 100 --no-pager`或服务器的`/opt/mofufans/data/setup-token`读取本实例安装码。先按下一步建立只供自己访问的通道，再打开后台完成认领，不公开安装码。
 
 5. 模板默认前台`http://127.0.0.1:8088/`，后台`http://127.0.0.1:8088/admin/`。远程电脑可使用：
 
@@ -69,7 +69,7 @@ docker compose up -d --build
 docker compose logs --tail=100 mofufans
 ```
 
-此方案在镜像内编译，首次启动需要联网下载构建依赖，会比原生运行包慢；不要求宿主机安装Go或Node.js。默认宿主机只监听`127.0.0.1:8088`，之后的认领、HTTPS和安全检查与上面一致。面板／NAS的挂载目录和网络转发配置见[完整部署指南](DEPLOYMENT.md#服务器面板与-nas)。
+此方案在镜像内编译，首次启动需要联网下载构建依赖，会比原生运行包慢；不要求宿主机安装Go或Node.js。默认宿主机只监听`127.0.0.1:8088`。从上述Compose日志或自己挂载目录中的`data/setup-token`读取安装码，经本机／SSH转发进入后台认领；Docker不使用原生服务的journalctl或固定`/opt/mofufans`路径。之后的HTTPS和安全检查同上。面板／NAS的挂载目录和网络转发配置见[完整部署指南](DEPLOYMENT.md#服务器面板与-nas)。
 
 ## 配置与功能边界
 
@@ -85,6 +85,6 @@ B站扫码、签名验证、私信、AI和OSS按需要使用自己的账号和�
 
 后台：https://mofufans-demo.dewitt.work/admin/
 
-演示部署使用独立示例数据，前后台均只读，修改、上传、投稿、私信及真实外部服务调用不可用；不提供生产账号或后台密码。自己部署后才使用自己管理的数据与完整操作能力。
+演示部署使用独立示例数据，前后台均只读，后台免密进入；修改、上传、投稿、私信及真实外部服务调用不可用，不会提供生产账号。自己部署后才使用自己管理的数据与完整操作能力。
 
 使用问题请查看[仓库README的联系方式](https://github.com/DewittCarol/MofuFans#readme)。漏洞不要在公开Issue中附上凭据或用户数据，报告方式见[安全政策](../SECURITY.md)。

@@ -8,17 +8,17 @@
 
 部署助手请先读[AGENTS.md](../AGENTS.md)及[上线安全指南](../doc/SECURITY-OPERATIONS.md)。完整开发说明对应源码仓库，本运行包不包含Go源码和前端构建环境。
 
-首次安装到 `/opt/mofufans` 后，按照[部署指南](../doc/DEPLOYMENT.md#3-初始化安装目录)设置用户和权限，安装 `deploy/mofufans.service` 与 `deploy/nginx-native.conf`。启动后从服务日志复制一次性安装码，打开 `/admin/` 完成网页引导。已经把运行包放入安装目录时，跳过指南中的复制构建产物步骤。
+首次安装到 `/opt/mofufans` 后，按照[部署指南](../doc/DEPLOYMENT.md#3-初始化安装目录)设置用户和权限，安装 `deploy/mofufans.service` 与 `deploy/nginx-native.conf`。执行 `systemctl daemon-reload`、`systemctl enable --now mofufans`启动服务，Nginx配置须先`nginx -t`成功再启用／重载。从服务日志或`data/setup-token`读取一次性安装码，经服务器本机或SSH转发访问后台完成引导。已经把运行包放入安装目录时，跳过指南中的复制构建产物步骤。
 
-默认访问地址为 `http://127.0.0.1:8088/`，后台位于 `/admin/`。默认 SQLite 和本地存储即可使用，外部服务可以后续在后台配置：
+默认地址 `http://127.0.0.1:8088/`是服务器本机的Nginx入口，转发到Go API的回环8080端口，后台位于`/admin/`。远程电脑按部署指南建立SSH转发后访问，不能直接把该本机地址当公网地址。默认SQLite和本地存储即可使用，外部服务可以后续在后台配置：
 
-- 「系统设置 → 部署与集成」：本地／私有阿里云 OSS、连接检查、私信测试 UID 和 HTTPS Cookie。
+- 「系统设置 → 部署与集成」：本地／私有阿里云 OSS、连接检查、私信测试 UID 和 HTTPS Cookie；先通过HTTPS实际进入后台再开启安全Cookie，HTTP阶段提前开启会导致无法登录。
 - 「系统设置 → AI 辅助审核」：OpenAI Chat Completions／Responses 或 Anthropic Messages，支持自定义服务、模型获取、思考参数和连接测试；默认关闭。配置步骤见 [AI 指南](../doc/AI.md)。
 - 「主题管理」：品牌、配色、导航、背景、鼠标、表情合集和页脚 ICP／公安备案信息。
 
 配置优先级、OSS 文件迁移和数据备份见 [配置参考](../doc/CONFIGURATION.md)。数据库、实例密钥和运行配置均需持久保存，不属于可重新生成的程序文件。
 
-升级时保留已有 `config/config.json` 和 `data/`，只替换程序与 `web/`，并参考新版配置模板合并新增项。
+升级前按升级说明备份配置、密钥、数据库与文件，SQLite使用backup API或停服备份。保留已有`config/config.json`和`data/`，停服后替换程序、`web/`、文档与`BUILD.json`，对照配置模板合并新增项后再启动；不覆盖后续业务数据或重新生成密钥。
 
 包内附带[升级说明](../doc/UPGRADING.md)、[应用防护和误封恢复](../doc/SECURITY.md)及[功能适配边界](../doc/FEATURES.md)。程序、静态页与文档应来自同一版本。首次启动才会在本机生成实例密钥与安装码，发行包中没有管理员或通用密码。
 
