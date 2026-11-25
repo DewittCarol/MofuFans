@@ -307,7 +307,7 @@ export function PostCard({ data, isLoggedIn = false, emojiUpdates, archiveUpdate
                     <div
                       className="stamp__content bg-card w-full h-full relative"
                       style={{
-                        backgroundImage: 'repeating-linear-gradient(45deg, transparent 0 4px, currentColor 4px 5px)',
+                        backgroundImage: 'url(/image_stamp.png)',
                         backgroundSize: 'cover',
                       }}
                     >
