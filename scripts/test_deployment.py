@@ -27,7 +27,9 @@ class DeploymentTests(unittest.TestCase):
             files = ('config/config.example.json', 'scripts/init-config.py', 'deploy/nginx-native.conf',
                      'deploy/mofufans.service', 'deploy/Caddyfile', 'deploy/README-native.md',
                      'LICENSE', 'NOTICE.md', 'shared/joiask-emoji-assets.json', 'doc/DEPLOYMENT.md', 'doc/CONFIGURATION.md',
-                     'doc/DEVELOPMENT.md', 'doc/AI.md', 'frontend/out/index.html', 'admin/out/index.html')
+                     'SECURITY.md', 'deploy/AGENTS-native.md', 'scripts/whisper-helper/README.md',
+                     'doc/DEVELOPMENT.md', 'doc/AI.md', 'doc/FEATURES.md', 'doc/UPGRADING.md',
+                     'doc/SECURITY.md', 'doc/SECURITY-OPERATIONS.md', 'frontend/out/index.html', 'admin/out/index.html')
             for name in files:
                 file = root / name
                 file.parent.mkdir(parents=True, exist_ok=True)
@@ -48,6 +50,9 @@ class DeploymentTests(unittest.TestCase):
                 builder.build(root, output)
             self.assertTrue((output / 'mofufans').is_file())
             self.assertTrue((output / 'web/admin/index.html').is_file())
+            self.assertTrue((output / 'doc/SECURITY-OPERATIONS.md').is_file())
+            self.assertTrue((output / 'doc/UPGRADING.md').is_file())
+            self.assertTrue((output / 'AGENTS.md').is_file())
             self.assertFalse((output / 'config/config.json').exists())
             self.assertEqual(list((output / 'data').iterdir()), [])
             self.assertEqual((root / 'config/config.json').read_text(), 'PRIVATE CONFIG MUST STAY HERE')

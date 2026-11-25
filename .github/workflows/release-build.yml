@@ -1,0 +1,64 @@
+name: Release packages
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/release-*']
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Linux ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: amd64
+            goarch: x64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+            goarch: arm64
+    runs-on: ${{ matrix.runner }}
+    container: ubuntu:22.04
+    steps:
+      - name: Prepare native build environment
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates git python3 build-essential nginx curl xz-utils
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          architecture: ${{ matrix.goarch }}
+          cache: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build complete native package
+        run: python3 scripts/build-release.py --version v0.1.0 --output dist/mofufans
+      - name: Verify regression and dependencies
+        run: |
+          go test ./cmd/... ./internal/... ./pkg/...
+          node scripts/test-clients.mjs
+          python3 -m unittest discover -s scripts -p 'test_deployment.py'
+          npm audit --prefix frontend
+          npm audit --prefix admin
+          go run golang.org/x/vuln/cmd/govulncheck@v1.10.0 ./...
+      - name: Verify installation, proxy and persisted data
+        run: |
+          python3 scripts/smoke-test.py --binary dist/mofufans/mofufans --nginx
+          python3 scripts/smoke-onboarding.py --binary dist/mofufans/mofufans
+          python3 scripts/smoke-upgrade.py --old-binary dist/mofufans/mofufans --binary dist/mofufans/mofufans
+          python3 scripts/verify-release-package.py dist/mofufans --arch ${{ matrix.arch }} --version v0.1.0
+      - name: Archive verified package
+        run: |
+          mkdir -p release-assets
+          tar -C dist -czf release-assets/mofufans-v0.1.0-linux-${{ matrix.arch }}.tar.gz mofufans
+          sha256sum release-assets/* > release-assets/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.arch }}
+          path: release-assets/
+          retention-days: 7
