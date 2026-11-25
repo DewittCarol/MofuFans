@@ -1,16 +1,16 @@
-# v0.1.0 下载与使用说明
+# v0.1.1 下载与使用说明
 
 [返回 README](../README.md) · [完整部署](DEPLOYMENT.md) · [上线安全检查](SECURITY-OPERATIONS.md)
 
-下载页面：https://github.com/DewittCarol/MofuFans/releases/tag/v0.1.0
+下载页面：https://github.com/DewittCarol/MofuFans/releases/tag/v0.1.1
 
 ## 选择下载文件
 
 | 文件 | 适用场景 |
 | --- | --- |
-| `mofufans-v0.1.0-linux-amd64.tar.gz` | 64位Intel／AMD Linux服务器，`uname -m` 为 `x86_64` |
-| `mofufans-v0.1.0-linux-arm64.tar.gz` | 64位ARM Linux服务器，`uname -m` 为 `aarch64` 或 `arm64` |
-| `MofuFans-v0.1.0-source.zip` | 修改源码，或用Docker Compose部署；Windows／macOS也使用此方式 |
+| `mofufans-v0.1.1-linux-amd64.tar.gz` | 64位Intel／AMD Linux服务器，`uname -m` 为 `x86_64` |
+| `mofufans-v0.1.1-linux-arm64.tar.gz` | 64位ARM Linux服务器，`uname -m` 为 `aarch64` 或 `arm64` |
+| `MofuFans-v0.1.1-source.zip` | 修改源码，或用Docker Compose部署；Windows／macOS也使用此方式 |
 | `QUICKSTART.zh-CN.md` | 本使用说明，可单独下载阅读 |
 | `SHA256SUMS` | 上述下载附件的SHA256校验值 |
 
@@ -32,7 +32,7 @@ sha256sum --ignore-missing -c SHA256SUMS
 
    ```bash
    mkdir -p ~/mofufans-install
-   tar -xzf mofufans-v0.1.0-linux-amd64.tar.gz -C ~/mofufans-install
+   tar -xzf mofufans-v0.1.1-linux-amd64.tar.gz -C ~/mofufans-install
    cd ~/mofufans-install/mofufans
    cat BUILD.json
    ```

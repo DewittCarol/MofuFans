@@ -382,4 +382,3 @@ export async function deleteBilibiliVerificationAccount(): Promise<ApiResponse<n
   const res = await fetch(`${API_BASE}/bilibili-verification-account`, { method: 'DELETE', credentials: 'include' });
   return res.json();
 }
-
